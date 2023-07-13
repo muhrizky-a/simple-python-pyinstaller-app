@@ -5,23 +5,32 @@ node {
         }
     }
     docker.image('qnib/pytest').inside() {
-        stage('Test') {
-            sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
-            post {
-                always {
-                    junit 'test-reports/results.xml'
-                 }
+        try {
+            stage('Test') {
+                sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
             }
+        } catch (e) {
+            echo 'This will run only if failed'
+            throw e
+        } finally {
+            junit 'test-reports/results.xml'
         }
     }
     docker.image('cdrx/pyinstaller-linux:python2').inside() {
-        stage('Deliver') {
-            sh 'pyinstaller --onefile sources/add2vals.py'
-            post {
-                success {
-                    archiveArtifacts 'dist/add2vals'
-                 }
+        try {
+            stage('Deliver') {
+                sh 'pyinstaller --onefile sources/add2vals.py'
             }
+        } catch (e) {
+            echo 'This will run only if failed'
+            throw e
+        } finally {
+            def currentResult = currentBuild.result ?: 'SUCCESS'
+            if (currentResult == 'SUCCESS') {
+                archiveArtifacts 'dist/add2vals'
+            }
+
+            echo 'This will always run'
         }
     }
 }
