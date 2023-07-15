@@ -16,4 +16,16 @@ node {
             junit 'test-reports/results.xml'
         }
     }
+    docker.image('cdrx/pyinstaller-linux:python2').inside() {
+        try {
+            stage('Deliver') {
+                sh 'pyinstaller --onefile sources/add2vals.py'
+            }
+        } catch (e) {
+            echo 'This will run only if failed'
+            throw e
+        } finally {
+            echo 'This will always run'
+        }
+    }
 }
