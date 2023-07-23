@@ -30,7 +30,7 @@ node {
             throw e
         } finally {
 	    if (currentBuild.currentResult == 'SUCCESS') {
-                archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
+                archiveArtifacts "sources/dist/add2vals"
                 sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'rm -rf build dist'"
             }
         }
