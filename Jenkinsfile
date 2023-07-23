@@ -34,11 +34,10 @@ node {
         } finally {
 	    if (currentBuild.currentResult == 'SUCCESS') {
                 archiveArtifacts "sources/dist/add2vals"
-                sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'rm -rf build dist'"
-
                 timeout(time: 1) {
                     input message: 'Sudah selesai menggunakan add2vals App?'
                 }
+                sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'rm -rf build dist'"
             }
         }
     }
