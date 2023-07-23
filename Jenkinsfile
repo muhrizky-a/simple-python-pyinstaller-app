@@ -33,14 +33,8 @@ node {
             throw e
         } finally {
 	    if (currentBuild.currentResult == 'SUCCESS') {
-	        timeout(time: 15, unit: 'SECONDS') { // change to a convenient timeout for you
-		    userInput = input(
-		        id: 'Proceed1', message: 'Was this successful?', parameters: [
-		        [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']
-		        ])
-                }
                 archiveArtifacts "sources/dist/add2vals"
-                timeout(time: 1) {
+                sleep(time: 1, unit: MINUTES) {
                     input message: 'Sudah selesai menggunakan add2vals App?'
                 }
                 sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'rm -rf build dist'"
