@@ -29,6 +29,8 @@ node {
             echo 'This will run only if failed'	
             throw e
         } finally {
+            echo currentBuild.result
+            echo currentBuild.currentResult
 	    if (currentBuild.result == 'SUCCESS') {
                 archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
                 sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'rm -rf build dist'"
