@@ -22,7 +22,8 @@ node {
                 sh 'pyinstaller --onefile sources/add2vals.py'
             }
         } catch (e) {
-            echo 'This will run only if failed'
+            echo 'This will run only if failed'	
+            echo e
             throw e
         } finally {
             echo 'This will always run'
