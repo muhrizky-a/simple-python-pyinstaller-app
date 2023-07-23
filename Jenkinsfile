@@ -16,17 +16,24 @@ node {
             junit 'test-reports/results.xml'
         }
     }
-    docker.image('cdrx/pyinstaller-linux:python2').inside("--entrypoint=''") {
+    stage('Deploy') {
         try {
-            stage('Deploy') {
-                sh 'pyinstaller --onefile sources/add2vals.py'
+            env.VOLUME = "${pwd()}/sources:/src"
+            env.IMAGE = 'cdrx/pyinstaller-linux:python2'
+
+            dir(env.BUILD_ID) {
+                unstash(name: 'compiled-results')
+                sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'pyinstaller -F add2vals.py'"
             }
+
         } catch (e) {
             echo 'This will run only if failed'	
-            echo e
             throw e
         } finally {
-            echo 'This will always run'
+	    if (currentBuild.result == 'UNSTABLE') {
+                archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
+                sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'rm -rf build dist'"
+            }
         }
     }
 }
