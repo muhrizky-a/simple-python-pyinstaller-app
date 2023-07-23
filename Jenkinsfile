@@ -34,7 +34,7 @@ node {
         } finally {
 	    if (currentBuild.currentResult == 'SUCCESS') {
                 archiveArtifacts "sources/dist/add2vals"
-                sleep(time: 1, unit: MINUTES) {
+                sleep(time: 1, unit: 'MINUTES') {
                     input message: 'Sudah selesai menggunakan add2vals App?'
                 }
                 sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'rm -rf build dist'"
