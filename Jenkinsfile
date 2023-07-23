@@ -22,7 +22,6 @@ node {
             env.IMAGE = 'cdrx/pyinstaller-linux:python2'
 
             dir(env.BUILD_ID) {
-                unstash(name: 'compiled-results')
                 sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'pyinstaller -F add2vals.py'"
             }
 
