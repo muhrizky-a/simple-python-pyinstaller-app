@@ -29,7 +29,7 @@ node {
             echo 'This will run only if failed'	
             throw e
         } finally {
-	    if (currentBuild.result == 'UNSTABLE') {
+	    if (currentBuild.result == 'SUCCESS') {
                 archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
                 sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'rm -rf build dist'"
             }
