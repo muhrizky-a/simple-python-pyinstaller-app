@@ -1,8 +1,5 @@
 node {
     docker.image('python:2-alpine').inside() {
-	// stage('Generate') {
-	   // checkout scm // In case the repo files are not copied properly to Jenkins workspace
-	// }
         stage('Build') {
             sh 'python -m py_compile sources/add2vals.py sources/calc.py'
         }
