@@ -1,8 +1,8 @@
 node {
     docker.image('python:2-alpine').inside() {
-	stage('Generate') {
-	    checkout scm // In case the repo files are not copied properly to Jenkins workspace
-	}
+	// stage('Generate') {
+	   // checkout scm // In case the repo files are not copied properly to Jenkins workspace
+	// }
         stage('Build') {
             sh 'python -m py_compile sources/add2vals.py sources/calc.py'
         }
@@ -17,8 +17,11 @@ node {
             throw e
         } finally {
             junit 'test-reports/results.xml'
-	    if (currentBuild.currentResult == 'SUCCESS') {
-                input message: 'Lanjutkan ke tahap Deploy?'
+
+            stage('Manual Approval') {
+    	        if (currentBuild.currentResult == 'SUCCESS') {
+                    input message: 'Lanjutkan ke tahap Deploy?'
+                }
             }
         }
     }
